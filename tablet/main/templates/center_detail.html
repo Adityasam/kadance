@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load mathfilters%}
+{% block content %}
+
+<div class="container" style="font-family:Georgia, 'Times New Roman', Times, serif">
+
+    {% for message in messages %}
+        <div class="row">
+            <h4 style="color:red; margin-top:20px">{{ message }}</h4>
+        </div>
+    {% endfor %}
+<div class="row">
+    <div class="col-sm-12 text-center">
+        <h3 style="text-decoration:underline;font-weight: bold">{{ name.username|title }}</h3>
+    </div>
+</div>
+    <table class="table table-bordered" id="table" style="margin-top:30px">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">IMEI</th>
+                <th scope="col">Tablet_id</th>
+                <th scope="col">Received</th>
+                <th scope="col">Allotted to</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">Completion Date</th>
+                <th scope="col">Condition</th>
+                <th scope="col">Status</th>
+                <th scope="col">Transfer</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for d in data %}
+            {% if d.at == name.id %}
+            {% for o in over %}
+              <tr {% if o == d.imei %} style="background:rgb(189, 65, 65);color: white" {% endif %}>
+                {% endfor %}
+                <th class="text-center" scope="row">{{ d.imei }}</th>
+                <td class="text-center">
+                    {{ d.tablet_id }}
+                </td>
+                <td class="text-center">
+                    <i class="fas fa-check-circle" style="color:green;font-size: 30px"></i>
+                </td>
+                <td class="text-center">
+                    {{ d.allotted_to }}
+                </td>
+                <td class="text-center">{{ d.start_date}}</td>
+                <td class="text-center">{{ d.end_date }}</td>
+                {% if d.condition == False %}
+                <td class="text-center" style="background:green;color:white;border-radius: 10px">Working</td>
+                {% else %}
+                <td class="text-center" style="background:red;color: white;border-radius: 10px">Not Working</td>
+                {%endif  %}
+                <td>
+                    {% if d.complete == True %}
+                    <h4>Free</h4>
+                    {% else %}
+                    <h4>Engaged</h4>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% with tid=d.tablet_id %}
+                    <a href="{% url 'main:transfer' tid %}">
+                    {% endwith %}
+                    <button class="btn btn-info" {% if d.complete == False %} disabled {% endif %}>Transfer></button>
+                    </a>
+                </td>
+              </tr>
+              {% endif %}
+            {% endfor %}
+
+            {% for d in dat %}
+            {% if d.imei not in engaged %}
+            <tr style="background:rgb(213, 250, 215)">
+                    
+                    <th class="text-center" scope="row">{{ d.imei }}</th>
+                    <td class="text-center">
+                        {{ d.t_id }}
+                    </td>
+                    <td class="text-center">
+                        {% if d.received == True %}
+                        <i class="fas fa-check-circle" style="color:green;font-size:30px"></i>
+                        {% else %}
+                        <i class="fas fa-times-circle" style="color:red;font-size:30px"></i>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {{ d.allotted_to }}
+                    </td>
+                    <td class="text-center">{{ d.start_date}}</td>
+                    <td class="text-center">{{ d.end_date }}</td>
+                    <td class="text-center" style="background:green;color:white;border-radius: 10px">Working</td>
+                    <td>
+                        <h4>Free</h4>
+                    </td>
+                    <td class="text-center">
+                        {% with tid=d.t_id cid=d.center_id %}
+                        <a href="{% url 'main:transfer_from_center' tid cid%}">
+                        {% endwith %}
+                        <button class="btn btn-info" {% if d.complete == False %} disabled {% endif %}>Transfer></button>
+                        </a>
+                    </td>
+                  </tr >
+                  {% endif %}
+            {% endfor %}
+            </tbody>
+          </table>
+
+
+    </div>
+</div>
+
+{% endblock %}

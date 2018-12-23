@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load mathfilters%}
+{% block content %}
+
+<div class="container" style="font-family:Georgia, 'Times New Roman', Times, serif">
+
+    {% for message in messages %}
+        <div class="row">
+            <h4 style="color:red; margin-top:20px">{{ message }}</h4>
+        </div>
+    {% endfor %}
+
+    <div class="row" style="margin-top:10px">
+        <div class="col-sm-6">
+        <h3 style="text-decoration:underline">Total Tablets Allotted: {{ data.allotted }}</h3>
+        </div>
+        <div class="col-sm-6">
+            {% with d=data.allotted %}
+            <h4 style="text-decoration:underline">Total Tablets Available: {{d|sub:tot}}</h4>
+            {% endwith %}
+        </div>
+    </div>
+    <div class="row text-center label-info" style="color:royalblue;margin-top:10px;margin-bottom: -20px">
+        <div class="col-sm-3">
+            <label>Distribution Points</label>
+        </div>
+        <div class="col-sm-2">
+            <label for="">Tablets Allotted</label>
+        </div>
+        <div class="col-sm-2">
+            <label for="">Start Date</label>
+        </div>
+        <div class="col-sm-2">
+            <label for="">End Date</label>
+        </div>
+    </div>
+    {% for d in dat %}
+    {% with did=d.id %}
+    <form action="{% url 'main:update_center' did %}" method="POST">
+        {% endwith%}
+        {% csrf_token %}
+        <div class="row" style="margin-top:10px">
+            <div class="col-sm-3">
+                <input type="text" name="point" value={{ d.distribution_point }} placeholder="Distribution Point" class="form-control" style="width:100%">
+            </div>
+            <div class="col-sm-2">
+                <input type="text" name="allotment" value={{ d.allotment }} placeholder="Allotment" class="form-control" style="width:100%">
+            </div>
+            <div class="col-sm-2">
+                <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" name="s_date" value={{ d.start_date|date:'Y-m-d' }} class="form-control" style="width:100%">
+            </div>
+            <div class="col-sm-2">
+                <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" name="e_date" value={{ d.end_date|date:'Y-m-d' }} class="form-control" style="width:100%">
+            </div>
+            <div class="col-sm-2">
+                <input type="submit" class="form-control btn btn-success" value="Update" style="width:100%">
+            </div>
+        </div>
+        </form>
+    {% endfor %}
+    <div class="row text-center label-info" style="color:royalblue;margin-top:50px;margin-bottom: -70px">
+            <div class="col-sm-3">
+                <label>Distribution Points</label>
+            </div>
+            <div class="col-sm-2">
+                <label for="">Tablets Allotted</label>
+            </div>
+            <div class="col-sm-2">
+                <label for="">Start Date</label>
+            </div>
+            <div class="col-sm-2">
+                <label for="">End Date</label>
+            </div>
+        </div>
+    <form action="{% url 'main:add_center_data' %}" method="POST" style="margin-top:60px">
+        {% csrf_token %}
+    <div class="row" style="margin-top:10px">
+        <div class="col-sm-3">
+            <input type="text" name="point" placeholder="Distribution Point" class="form-control" style="width:100%">
+        </div>
+        <div class="col-sm-2">
+            <input type="text" name="allotment" placeholder="Allotment" class="form-control" style="width:100%">
+        </div>
+        <div class="col-sm-2">
+            <input type="date" name="s_date" class="form-control" style="width:100%">
+        </div>
+        <div class="col-sm-2">
+            <input type="date" name="e_date" class="form-control" style="width:100%">
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="form-control btn btn-info" value="Submit" style="width:100%">
+        </div>
+    </div>
+    </div>
+</div>
+
+{% endblock %}

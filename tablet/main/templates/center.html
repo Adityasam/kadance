@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load mathfilters%}
+{% block content %}
+
+<div class="container" style="font-family:Georgia, 'Times New Roman', Times, serif">
+
+    {% for message in messages %}
+        <div class="row">
+            <h4 style="color:red; margin-top:20px">{{ message }}</h4>
+        </div>
+    {% endfor %}
+
+    <div class="row" style="margin-top:10px">
+        <div class="col-sm-4">
+            <div class="row">
+        <h3 style="text-decoration:underline">Total Tablets Allotted: {{ ct }}</h3>
+        </div>
+        <div class="row">
+            <h4>To be received: {{ tobe }}</h4>
+        </div>
+        </div>
+        <div class="col-sm-4 text-center">
+        <h2 style="text-decoration:underline;font-weight: bold">
+            {{ name.username|title }}
+        </h2>
+        </div>
+    
+        <div class="col-sm-4 text-right">
+            <a href="{% url 'main:center_detail' center_id %}">
+            <button class="btn btn-success">Show Details</button>
+            </a>
+        </div>
+    </div>
+
+    <!-- <div class="row">
+        {% for d in dat %}
+            {{ d.imei }}
+        {% endfor %}
+    </div> -->
+<div class="row">
+    <div class="col-sm-10">
+    <table class="table table-bordered" id="table" style="margin-top:30px">
+        <thead class="thead-dark">
+          <tr>
+            <th width="40%" scope="col">IMEI</th>
+            <th width="30%" scope="col">Tablet_id</th>
+            <th width="30%" scope="col">Date</th>
+            
+          </tr>
+        </thead>
+    </table>
+    </div>
+    </div>
+    <form id="myform" action="{% url 'main:add_data' center_id %}" method="POST" style="margin-top:0px">
+        {% csrf_token %}
+    <div class="row" id="r1" style="margin-top:0px">
+        <!-- <div class="col-sm-2">
+            <input type="text" class="form-control" name="allotment" id="allot" placeholder="Allottment">
+        </div> -->
+        <div class="col-sm-4">
+            <input type="text" name="im0" placeholder="IMEI Number" class="form-control" style="width:100%">
+        </div>
+        <div class="col-sm-3">
+            <input type="text" name="tid0" placeholder="Tablet ID" class="form-control" style="width:100%">
+        </div>
+        <div class="col-sm-3">
+            <input type="date" id="dat" name="date" class="form-control" style="width:100%">
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="form-control btn btn-info" value="Submit" style="width:100%">
+        </div>
+        <div class="col-sm-2">
+            <input type="hidden" name="count" id="countid" value="1">
+        </div>
+    </div>
+    </form>
+    <button onclick="addel()" class="btn btn-success" style="margin-top:20px">Add Tablet</button>
+    </div>
+</div>
+
+<script>
+var clickcount=0;
+
+function addel(){
+clickcount+=1;
+
+var c=document.getElementById("countid");
+c.value=clickcount;
+
+var x=document.createElement("div");
+x.setAttribute("class", "row");
+x.style.marginTop="10px";
+
+var imc=document.createElement("div");
+imc.setAttribute("class", "col-sm-4");
+
+var im=document.createElement("INPUT");
+im.setAttribute("type", "text");
+im.setAttribute("class", "form-control");
+im.setAttribute("placeholder", "IMEI Number");
+im.style.width="100%";
+imname="im"+clickcount.toString();
+im.setAttribute("name", imname);
+
+var idc=document.createElement("div");
+idc.setAttribute("class", "col-sm-3");
+
+var id=document.createElement("INPUT");
+id.setAttribute("type", "text");
+id.setAttribute("class", "form-control");
+id.setAttribute("placeholder", "Tablet ID");
+id.style.width="100%";
+idname="tid"+clickcount.toString();
+id.setAttribute("name", idname);
+
+imc.appendChild(im);
+idc.appendChild(id);
+
+x.appendChild(imc);
+x.appendChild(idc);
+document.getElementById("myform").appendChild(x);
+
+}
+</script>
+
+<script>
+function dateset(){
+var myDate = document.getElementById('dat');
+var today = new Date();
+myDate.value = today.toISOString().substr(0, 10);
+        
+}
+window.onload=dateset();
+</script>
+{% endblock %}

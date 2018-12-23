@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load mathfilters%}
+{% block content %}
+
+<div class="container" style="font-family:Georgia, 'Times New Roman', Times, serif">
+
+    {% for message in messages %}
+        <div class="row">
+            <h4 style="color:red; margin-top:20px">{{ message }}</h4>
+        </div>
+    {% endfor %}
+    <div class="row text-center label-info" style="color:royalblue;margin-top:50px;margin-bottom:0px">
+            <!-- <div class="col-sm-2">
+                <label>Allottment</label>
+            </div> -->
+            <div class="col-sm-3">
+                <label style="text-decoration:underline">IMEI Number</label>
+            </div>
+            <div class="col-sm-2">
+                <label style="text-decoration:underline">ID</label>
+            </div>
+            <div class="col-sm-2">
+                <label style="text-decoration:underline">Date</label>
+            </div>
+            <div class="col-sm-2">
+                <label style="text-decoration:underline">Center</label>
+            </div>
+        </div>
+    
+    <form id="myform" action="{% url 'main:transfer_tab' %}" method="POST" style="margin-top:20px">
+        {% csrf_token %}
+    <div class="row" id="r1" style="margin-top:10px">
+        <!-- <div class="col-sm-2">
+            <input type="text" class="form-control" name="allotment" id="allot" placeholder="Allottment">
+        </div> -->
+        <div class="col-sm-3">
+            <input type="text" name="im0" placeholder="IMEI Number" class="form-control" style="width:100%" value="{{ data.imei }}">
+        </div>
+        <div class="col-sm-2">
+            <input type="text" name="tid0" placeholder="Tablet ID" class="form-control" style="width:100%" value="{{ tid }}">
+        </div>
+        <div class="col-sm-2">
+            <input type="date" name="date" id='dat' class="form-control" style="width:100%">
+        </div>
+        <div class="cl-sm-2">
+                <fieldset>
+                           <select name="center" style="width:200px" class="form-control">
+                            {% for d in center_data%}
+                            {% if d.is_superuser %}
+                            {% else %}
+                             <option value = "{{ d.center_id }}">{{ d.name }}</option>
+                             {% endif %}
+                             {% endfor %}
+                           </select>
+                     </fieldset>
+        </div>
+        <div class="col-sm-2">
+            <input type="hidden" name="ids" value="{{ data.id }}">
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="form-control btn btn-info" value="Send" style="width:100%">
+        </div>
+        <div class="col-sm-1">
+            <input type="hidden" name="cid" value="{{ cid }}">
+        </div>
+        
+    </div>
+    </form>
+    </div>
+</div>
+
+<script>
+function dateset(){
+var myDate = document.getElementById('dat');
+var today = new Date();
+myDate.value = today.toISOString().substr(0, 10);
+
+}
+window.onload=dateset();
+</script>
+{% endblock %}

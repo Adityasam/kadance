@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container" style="color:red">
+{% if messages %}
+    {% for message in messages %}
+        {{ message }}
+    {% endfor %}
+{% endif %}
+</div>
+
+<div class="container-fluid" style="font-family:Georgia, 'Times New Roman', Times, serif;margin-top: 30px">
+        <div class="row text-center label-info" style="color:royalblue;margin-top:10px;margin-bottom: -20px">
+            <div class="col-sm-1">
+                <label for="">No.</label>
+            </div>
+                <div class="col-sm-3">
+                    <label>Center Name</label>
+                </div>
+                <div class="col-sm-2">
+                    <label for="">Tablets Allotted</label>
+                </div>
+                <div class="col-sm-2">
+                    <label for="">Date</label>
+                </div>
+            </div>
+    {% for c in center_data %}
+    <div class="row" style="margin-top: 10px">
+        <form action="{% url 'main:update_data' c.id %}" class="form-inline" method="POST">
+        {% csrf_token %}
+        <div class="col-sm-1">
+            <input type="text" readonly value={{ forloop.counter }} class="form-control" style="width:100%">
+        </div>
+        <div class="col-sm-3">
+            <a href="{{ c.get_absolute_url }}">
+            <input type="text" name="name" readonly value={{ c.name }} class="form-control" style="width:100%">
+            </a>
+        </div>
+        <div class="col-sm-2">
+            <input type="text" name="allot" value={{ c.allotted }} class="form-control" style="width:100%">
+        </div>
+        <div class="col-sm-2">
+            <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" name="date" value={{ c.date|date:'Y-m-d' }} class="form-control" style="width:100%">
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" id='ed_up' onclick="change()" value="Update" class="btn btn-success" style="width:100%">
+        </div>
+        <div class="col-sm-2">
+            <a href="{% url 'main:del_data' c.id %}">
+            <input type="button" value="Delete" onclick="return confirm('Are you sure you want to delete this?')" class="btn btn-danger" style="width:100%">
+            </a>
+        </div>
+        </form>
+    </div>
+    {% endfor %}
+
+
+    
+
+
+    <form action="{% url 'main:add_data' %}" class="form-inline" style="margin-top:50px"  method="POST">
+        {% csrf_token %}
+        <select class="form-control" name="name" style="width:30%" class="form-control">
+            {% for names in center_name %}
+                <option value={{ names.name }}>{{ names.name}}</option>
+            {% endfor %}
+                <option value="" selected="selected">---Select the center name---</option>
+            </select>
+        <input type="text" name="allotted" placeholder="Tablets Alloted" class="form-control" style="width:30%">
+        <input type="date" name="date" placeholder="Date" id="dat" class="form-control" style="width:20%">
+        <input type="submit" class="btn btn-success" value="Submit" class="form-control" style="width:20%">
+    </form>
+</div>
+
+<script>
+function get_date(){
+    var d=new Date();
+    var n=d.getDate();
+    document.getElementById('dat').value=n;
+}
+
+window.onload=get_date();
+</script>
+{% endblock %}
